@@ -5,8 +5,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_thread.h>
+#include <SDL.h>
+#include <SDL_thread.h>
 
 static SDL_Window* window;
 static SDL_Renderer* rend;
@@ -44,6 +44,9 @@ void change_color(int r, int g, int b);
 void clear();
 void save(const char* path);
 void shutdown();
+void gotohere();
+void where();
+double symbol_table[26];
 
 %}
 
@@ -67,7 +70,11 @@ void shutdown();
 %token NUMBER
 %token END
 %token SAVE
+%token GOTO
+%token WHERE
+%token VARIABLE
 %token PLUS SUB MULT DIV
+%token EQUALS
 %token<s> STRING QSTRING
 %type<f> expression expression_list NUMBER
 
@@ -82,15 +89,29 @@ statement:		command SEP					{ prompt(); }
 		|	error '\n' 					{ yyerrok; prompt(); }
 		;
 command:		PENUP						{ penup(); }
+		|		PENDOWN 				{ pendown(); }
+		|		PRINT 					{ printf(); }
+		|		SAVE					{ save(); }
+		|		CHANGE_COLOR NUMBER NUMBER NUMBER			{ change_color($2, $3, $4); }
+		|		COLOR					{ color(); }
+		|		CLEAR					{ clear(); }
+		|		TURN NUMBER				{ turn($2); }
+		|		LOOP					{ loop(); }
+		|		MOVE NUMBER				{ move($2); }
+		|		GOTO NUMBER NUMBER					{ gotohere($2, $3); }
+		|		WHERE					{ where(); }
+//		|		VARIABLE = expression	{ symbol_table[$1] = $3; }
+		|		expression_list			{ printf("Expression\n"); }
 		;
-expression_list:
-		|	// Complete these and any missing rules
+expression_list:	expression
+		|	expression_list expression// Complete these and any missing rules
 		;
 expression:		NUMBER PLUS expression				{ $$ = $1 + $3; }
 		|	NUMBER MULT expression				{ $$ = $1 * $3; }
 		|	NUMBER SUB expression				{ $$ = $1 - $3; }
 		|	NUMBER DIV expression				{ $$ = $1 / $3; }
-		|	NUMBER
+		|	NUMBER								
+//		|	VARIABLE							{ $$ = symbol_table[$1]; }
 		;
 
 %%
@@ -107,6 +128,20 @@ int yyerror(const char* s){
 
 void prompt(){
 	printf("gv_logo > ");
+}
+
+void gotohere(x1, y1){
+	if (pen_state){
+		x = x1;
+		y = y1;
+	}else{
+		x = x1;
+		y = y1;
+	}
+}
+
+void where(){
+	printf("%d, %d", x, y)
 }
 
 void penup(){

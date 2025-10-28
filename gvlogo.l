@@ -8,30 +8,32 @@ extern void yyerror(const char* s);
 
 %%
 
+
 penup	{ return PENUP; }
 pendown	{ return PENDOWN; }
 print	{ return PRINT; }
 save	{ return SAVE; }
+change_color	{ return CHANGE_COLOR; }
 color	{ return COLOR; }
 clear	{ return CLEAR; }
 turn	{ return TURN; }
+loop	{ return LOOP; }
 move	{ return MOVE; }
-\*goto	{ return GOTO; }
-\*where	{ return WHERE; }
+number	{ return NUMBER; }
+gotohere	{ return GOTO; }
+where	{ return WHERE; }
 [0-9]+	{ yylval.num = atof(yytext); return NUMBER; }
 end		{ return END; }
 =		{ return EQUALS; }
 \+		{ return PLUS; }
--		{ return MINUS; }
+-		{ return SUB; }
 \*		{ return MULT; }
 \/		{ return DIV; }
-;		{ return SEMI; }
+;		{ return SEP; }
 \$[A-Z]	{ yylval.var = yytext[1] - 65; return VARIABLE; }
 
 [ \t\r\n]			;
 .			{ yyerror("Lexing Syntax error.\n"); } 
-
-.		{ printf("Unkown character: %s\n", yytext); }
 
 %%
 
