@@ -44,9 +44,9 @@ void change_color(int r, int g, int b);
 void clear();
 void save(const char* path);
 void shutdown();
-void gotohere();
-void where();
-double symbol_table[26];
+void gotohere(float x1, float y1); //added gothere function
+void where(); //added where function
+double symbol_table[26]; //added variable symbol table
 
 %}
 
@@ -67,14 +67,13 @@ double symbol_table[26];
 %token TURN
 %token LOOP
 %token MOVE
-%token NUMBER
 %token END
 %token SAVE
-%token GOTO
-%token WHERE
-%token VARIABLE
+%token GOTO//added GOTO token
+%token WHERE //added where token
+%token <var> VARIABLE //added variable token
 %token PLUS SUB MULT DIV
-%token EQUALS
+%token EQUALS //added equals token
 %token<s> STRING QSTRING
 %type<f> expression expression_list NUMBER
 
@@ -88,21 +87,23 @@ statement_list:		statement
 statement:		command SEP					{ prompt(); }
 		|	error '\n' 					{ yyerrok; prompt(); }
 		;
-command:		PENUP						{ penup(); }
-		|		PENDOWN 				{ pendown(); }
-		|		PRINT 					{ printf(); }
-		|		SAVE					{ save(); }
-		|		CHANGE_COLOR NUMBER NUMBER NUMBER			{ change_color($2, $3, $4); }
-		|		COLOR					{ color(); }
-		|		CLEAR					{ clear(); }
-		|		TURN NUMBER				{ turn($2); }
-		|		LOOP					{ loop(); }
-		|		MOVE NUMBER				{ move($2); }
-		|		GOTO NUMBER NUMBER					{ gotohere($2, $3); }
-		|		WHERE					{ where(); }
-//		|		VARIABLE = expression	{ symbol_table[$1] = $3; }
-		|		expression_list			{ printf("Expression\n"); }
+//added commands for tokens to be consumed
+command:		PENUP						{ penup(); } //put penup
+		|		PENDOWN 				{ pendown(); } //put pendown
+//		|		PRINT 					{ printf(); }
+		|		SAVE					{ save(); } //save screen/image
+		|		CHANGE_COLOR NUMBER NUMBER NUMBER	{ change_color($2, $3, $4); } //change color to specific R G B input
+		|		COLOR					{ color(); } //print color
+		|		CLEAR					{ clear(); } //clear screen
+		|		TURN NUMBER				{ turn($2); } //turn cursor specified num
+//		|		LOOP					{ loop(); }
+		|		MOVE NUMBER				{ move($2); } // move cursor direction its pointing specified number
+		|		GOTO NUMBER NUMBER					{ gotohere($2, $3); }//teleport to specified number
+		|		WHERE					{ where(); } //print current position
+		|		VARIABLE = NUMBER	{ symbol_table[$1] = $2; }
+		|		expression			{ printf("Expression\n"); }
 		;
+//added expression and expression_list expression commands
 expression_list:	expression
 		|	expression_list expression// Complete these and any missing rules
 		;
@@ -111,7 +112,7 @@ expression:		NUMBER PLUS expression				{ $$ = $1 + $3; }
 		|	NUMBER SUB expression				{ $$ = $1 - $3; }
 		|	NUMBER DIV expression				{ $$ = $1 / $3; }
 		|	NUMBER								
-//		|	VARIABLE							{ $$ = symbol_table[$1]; }
+		|	VARIABLE							{ $$ = symbol_table[$1]; }
 		;
 
 %%
@@ -129,19 +130,18 @@ int yyerror(const char* s){
 void prompt(){
 	printf("gv_logo > ");
 }
-
-void gotohere(x1, y1){
-	if (pen_state){
-		x = x1;
-		y = y1;
-	}else{
-		x = x1;
-		y = y1;
-	}
+//added to move cursor to specific location
+void gotohere(float x1, float y1){
+	x = x1;
+	y = y1;
 }
-
+//added to print color
+void color(){
+	printf("r = %f, g = %f, b = %f\n", r, g, b);
+}
+//added to print where cursor is
 void where(){
-	printf("%d, %d", x, y)
+	printf("%f, %f\n", x, y);
 }
 
 void penup(){

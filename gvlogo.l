@@ -8,7 +8,7 @@ extern void yyerror(const char* s);
 
 %%
 
-
+//created Tokens to be consumed upon call except for ignoring whitespace token
 penup	{ return PENUP; }
 pendown	{ return PENDOWN; }
 print	{ return PRINT; }
@@ -19,10 +19,9 @@ clear	{ return CLEAR; }
 turn	{ return TURN; }
 loop	{ return LOOP; }
 move	{ return MOVE; }
-number	{ return NUMBER; }
 gotohere	{ return GOTO; }
 where	{ return WHERE; }
-[0-9]+	{ yylval.num = atof(yytext); return NUMBER; }
+[0-9]+(\.[0-9]+)?	{ yylval.num = atof(yytext); return NUMBER; }
 end		{ return END; }
 =		{ return EQUALS; }
 \+		{ return PLUS; }
