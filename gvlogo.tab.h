@@ -47,21 +47,20 @@
      COLOR = 263,
      CLEAR = 264,
      TURN = 265,
-     LOOP = 266,
-     MOVE = 267,
-     NUMBER = 268,
-     END = 269,
-     SAVE = 270,
-     GOTO = 271,
-     WHERE = 272,
-     VARIABLE = 273,
-     PLUS = 274,
-     SUB = 275,
-     MULT = 276,
-     DIV = 277,
-     EQUALS = 278,
-     STRING = 279,
-     QSTRING = 280
+     MOVE = 266,
+     END = 267,
+     SAVE = 268,
+     GOTO = 269,
+     WHERE = 270,
+     VARIABLE = 271,
+     PLUS = 272,
+     SUB = 273,
+     MULT = 274,
+     DIV = 275,
+     EQUALS = 276,
+     NUMBER = 277,
+     STRING = 278,
+     QSTRING = 279
    };
 #endif
 /* Tokens.  */
@@ -73,34 +72,34 @@
 #define COLOR 263
 #define CLEAR 264
 #define TURN 265
-#define LOOP 266
-#define MOVE 267
-#define NUMBER 268
-#define END 269
-#define SAVE 270
-#define GOTO 271
-#define WHERE 272
-#define VARIABLE 273
-#define PLUS 274
-#define SUB 275
-#define MULT 276
-#define DIV 277
-#define EQUALS 278
-#define STRING 279
-#define QSTRING 280
+#define MOVE 266
+#define END 267
+#define SAVE 268
+#define GOTO 269
+#define WHERE 270
+#define VARIABLE 271
+#define PLUS 272
+#define SUB 273
+#define MULT 274
+#define DIV 275
+#define EQUALS 276
+#define NUMBER 277
+#define STRING 278
+#define QSTRING 279
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 53 "gvlogo.y"
+#line 54 "gvlogo.y"
 {
 	float f;
 	char* s;
+	char v;
 }
 /* Line 1529 of yacc.c.  */
-#line 104 "gvlogo.tab.h"
+#line 103 "gvlogo.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

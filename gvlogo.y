@@ -40,6 +40,7 @@ void pendown();
 void move(int num);
 void turn(int dir);
 void output(const char* s);
+void get_color();
 void change_color(int r, int g, int b);
 void clear();
 void save(const char* path);
@@ -53,6 +54,7 @@ double symbol_table[26]; //added variable symbol table
 %union {
 	float f;
 	char* s;
+	char v;
 }
 
 %locations
@@ -65,17 +67,17 @@ double symbol_table[26]; //added variable symbol table
 %token COLOR
 %token CLEAR
 %token TURN
-%token LOOP
 %token MOVE
 %token END
 %token SAVE
 %token GOTO//added GOTO token
 %token WHERE //added where token
-%token <var> VARIABLE //added variable token
+%token <v> VARIABLE //added variable token
 %token PLUS SUB MULT DIV
 %token EQUALS //added equals token
+%token NUMBER //Added number token
 %token<s> STRING QSTRING
-%type<f> expression expression_list NUMBER
+%type<f> expression NUMBER
 
 %%
 
@@ -90,23 +92,19 @@ statement:		command SEP					{ prompt(); }
 //added commands for tokens to be consumed
 command:		PENUP						{ penup(); } //put penup
 		|		PENDOWN 				{ pendown(); } //put pendown
-//		|		PRINT 					{ printf(); }
-		|		SAVE					{ save(); } //save screen/image
+		|		PRINT QSTRING			{ printf("%s", $2); } //print out quoted string
+		|		SAVE STRING				{ save($2); } //save screen/image
 		|		CHANGE_COLOR NUMBER NUMBER NUMBER	{ change_color($2, $3, $4); } //change color to specific R G B input
-		|		COLOR					{ color(); } //print color
+		|		COLOR					{ get_color(); } //print color
 		|		CLEAR					{ clear(); } //clear screen
 		|		TURN NUMBER				{ turn($2); } //turn cursor specified num
-//		|		LOOP					{ loop(); }
 		|		MOVE NUMBER				{ move($2); } // move cursor direction its pointing specified number
 		|		GOTO NUMBER NUMBER					{ gotohere($2, $3); }//teleport to specified number
 		|		WHERE					{ where(); } //print current position
-		|		VARIABLE = NUMBER	{ symbol_table[$1] = $2; }
+		|		VARIABLE EQUALS NUMBER	{ symbol_table[$1] = $3; } //set var to a num
 		|		expression			{ printf("Expression\n"); }
 		;
 //added expression and expression_list expression commands
-expression_list:	expression
-		|	expression_list expression// Complete these and any missing rules
-		;
 expression:		NUMBER PLUS expression				{ $$ = $1 + $3; }
 		|	NUMBER MULT expression				{ $$ = $1 * $3; }
 		|	NUMBER SUB expression				{ $$ = $1 - $3; }
@@ -136,8 +134,8 @@ void gotohere(float x1, float y1){
 	y = y1;
 }
 //added to print color
-void color(){
-	printf("r = %f, g = %f, b = %f\n", r, g, b);
+void get_color(){
+	printf("r = %d, g = %d, b = %d\n", current_color.r, current_color.g, current_color.b);
 }
 //added to print where cursor is
 void where(){
@@ -159,14 +157,14 @@ void pendown() {
 void move(int num){
 	event.type = DRAW_EVENT;
 	event.user.code = 1;
-	event.user.data1 = num;
+	event.user.data1 = (void*)num;
 	SDL_PushEvent(&event);
 }
 
 void turn(int dir){
 	event.type = PEN_EVENT;
 	event.user.code = 2;
-	event.user.data1 = dir;
+	event.user.data1 = (void*)dir;
 	SDL_PushEvent(&event);
 }
 

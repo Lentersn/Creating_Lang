@@ -1,7 +1,7 @@
 #ifndef			__ZOOMJOYSTRONG__
 #define			__ZOOMJOYSTRONG__
 
-#include <SDL2/SDL.h>
+#include <SDL.h> //add SDL2/
 
 #define			HEIGHT	768
 #define			WIDTH	1024

@@ -1,6 +1,6 @@
 #include "zoomjoystrong.h"
 #include <math.h>
-#include <SDL2/SDL.h>
+#include <SDL.h> //add back SDL2/
 #include <unistd.h>
 
 struct color current;
