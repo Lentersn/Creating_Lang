@@ -5,8 +5,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL.h>
-#include <SDL_thread.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_thread.h>
 
 static SDL_Window* window;
 static SDL_Renderer* rend;
@@ -110,8 +110,8 @@ expression:		NUMBER PLUS expression				{ $$ = $1 + $3; }
 		|	NUMBER SUB expression				{ $$ = $1 - $3; }
 		|	NUMBER DIV expression				{ $$ = $1 / $3; }
 		|	NUMBER								
-		|	VARIABLE							{ $$ = symbol_table[$1]; }
-		;
+		|	VARIABLE					{ $$ = symbol_table[$1]; }
+		;	
 
 %%
 
@@ -130,6 +130,12 @@ void prompt(){
 }
 //added to move cursor to specific location
 void gotohere(float x1, float y1){
+	if (pen_state) {
+        SDL_SetRenderTarget(rend, texture);
+        SDL_RenderDrawLine(rend, (int)x, (int)y, (int)x1, (int)y1);
+        SDL_SetRenderTarget(rend, NULL);
+        SDL_RenderCopy(rend, texture, NULL, NULL);
+	}	
 	x = x1;
 	y = y1;
 }
