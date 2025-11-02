@@ -30,7 +30,7 @@ end		{ return END; }
 \*		{ return MULT; }
 \/		{ return DIV; }
 ;		{ return SEP; }
-\[A-Z]	{ yylval.v = yytext[1] - 65; return VARIABLE; }
+\$[A-Z]	{ yylval.v = yytext[1] - 65; return VARIABLE; }
 \".+\"	{ yylval.s = yytext; return QSTRING; }
 
 [ \t\r\n]			;
