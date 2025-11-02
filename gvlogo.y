@@ -94,14 +94,14 @@ command:		PENUP						{ penup(); } //put penup
 		|		PENDOWN 				{ pendown(); } //put pendown
 		|		PRINT QSTRING			{ printf("%s", $2); } //print out quoted string
 		|		SAVE STRING				{ save($2); } //save screen/image
-		|		CHANGE_COLOR NUMBER NUMBER NUMBER	{ change_color($2, $3, $4); } //change color to specific R G B input
+		|		CHANGE_COLOR expression expression expression	{ change_color($2, $3, $4); } //change color to specific R G B input
 		|		COLOR					{ get_color(); } //print color
 		|		CLEAR					{ clear(); } //clear screen
-		|		TURN NUMBER				{ turn($2); } //turn cursor specified num
-		|		MOVE NUMBER				{ move($2); } // move cursor direction its pointing specified number
-		|		GOTO NUMBER NUMBER					{ gotohere($2, $3); }//teleport to specified number
+		|		TURN expression				{ turn($2); } //turn cursor specified num
+		|		MOVE expression				{ move($2); } // move cursor direction its pointing specified number
+		|		GOTO expression expression					{ gotohere($2, $3); }//teleport to specified number
 		|		WHERE					{ where(); } //print current position
-		|		VARIABLE EQUALS NUMBER	{ symbol_table[$1] = $3; } //set var to a num
+		|		VARIABLE EQUALS expression	{ symbol_table[$1] = $3; } //set var to a num
 		|		expression			{ printf("Result: %f\n", $1); }
 		;
 //added expression and expression_list expression commands
