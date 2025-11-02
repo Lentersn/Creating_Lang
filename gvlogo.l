@@ -32,6 +32,7 @@ end		{ return END; }
 ;		{ return SEP; }
 \$[A-Z]	{ yylval.v = yytext[1] - 65; return VARIABLE; }
 \".+\"	{ yylval.s = yytext; return QSTRING; }
+[a-zA-Z0-9_\-\.]+  { yylval.s = yytext; return STRING; }
 
 [ \t\r\n]			;
 .			{ yyerror("Lexing Syntax error.\n"); } 
