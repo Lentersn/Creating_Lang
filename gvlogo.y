@@ -102,13 +102,13 @@ command:		PENUP						{ penup(); } //put penup
 		|		GOTO NUMBER NUMBER					{ gotohere($2, $3); }//teleport to specified number
 		|		WHERE					{ where(); } //print current position
 		|		VARIABLE EQUALS NUMBER	{ symbol_table[$1] = $3; } //set var to a num
-		|		expression			{ printf("Expression\n"); }
+		|		expression			{ printf("Result: %f\n", $1); }
 		;
 //added expression and expression_list expression commands
-expression:		NUMBER PLUS expression				{ $$ = $1 + $3; }
-		|	NUMBER MULT expression				{ $$ = $1 * $3; }
-		|	NUMBER SUB expression				{ $$ = $1 - $3; }
-		|	NUMBER DIV expression				{ $$ = $1 / $3; }
+expression:		expression PLUS expression				{ $$ = $1 + $3; }
+		|	expression MULT expression				{ $$ = $1 * $3; }
+		|	expression SUB expression				{ $$ = $1 - $3; }
+		|	expression DIV expression				{ $$ = $1 / $3; }
 		|	NUMBER								
 		|	VARIABLE					{ $$ = symbol_table[$1]; }
 		;	
