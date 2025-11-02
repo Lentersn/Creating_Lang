@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "gvlogo.tab.h"
 
+//CODE BY NATHAN LENTERS AND ALI KESEROVIC
+
 extern void yyerror(const char* s);
 %}
 
